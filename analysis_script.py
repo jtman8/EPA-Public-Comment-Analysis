@@ -115,7 +115,7 @@ def topic_modeling(df):
     print("Document-Topic Table")
     all_doc_topics = [lda_model.get_document_topics(doc) for doc in corpus]
     df.loc[:,'Topics'] = pd.Series(all_doc_topics)
-    print(all_doc_topics)
+    
     
 # Word frequency analysis
 def word_frequency(df, top_n=20):
@@ -230,6 +230,31 @@ def administrator_analysis(df):
     print("End of 'Administrator' Comments")
     print("###############################")
     
+def verify_extreme_sentiments(df):
+    
+    # Most positive TextBlob comments
+    print("Most Positive TextBlob")
+    top_tb = df[['Comment','Sentiment']].sort_values('Sentiment', ascending=False).head(20)
+    print(top_tb)
+    top_tb.to_csv("Positive_TextBlob.csv")
+    # Most negative TextBlob comments
+    bottom_tb = df[['Comment','Sentiment']].sort_values('Sentiment', ascending=True).head(20)
+    print("Most Negative TextBlob")
+    print(bottom_tb)
+    bottom_tb.to_csv("Negative_TextBlob.csv")
+    
+    
+    # Most positive VADER comments
+    print("Most Positive VADER")
+    top_vader = df[['Comment','Sentiment_Vader']].sort_values('Sentiment_Vader', ascending=False).head(20)
+    print(top_vader)
+    top_vader.to_csv("Positive_VADER.csv")
+    # Most negative VADER comments
+    print("Most Negative VADER")
+    bottom_vader = df[['Comment','Sentiment_Vader']].sort_values('Sentiment_Vader', ascending=True).head(20)
+    bottom_vader.to_csv("Negative_VADER.csv")
+    print(bottom_vader)
+    
 # Run all analyses
 def run_eda(file_path):
     df = load_data(file_path)
@@ -239,6 +264,7 @@ def run_eda(file_path):
     generate_wordcloud(df)
     sentiment_analysis(df)
     sentiment_analysis_vader(df)
+    verify_extreme_sentiments(df)
     jobs_analysis(df)
     foreign_analysis(df)
     administrator_analysis(df)
